@@ -1,0 +1,10 @@
+.git
+.idea
+*.iml
+
+# gradle generate files
+.gradle
+build
+
+# env files
+.env
