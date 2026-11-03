@@ -33,8 +33,14 @@ nb-configuration.xml
 *.rej
 
 # Local environment
-.env
+.env/*
+!.env/.gitkeep
 
+.secrets/*
+!.secrets/.gitkeep
+!.secrets/.checksum/
+.secrets/.checksum/*
+!.secrets/.checksum/.gitkeep
 
 
 # Plugin directory
