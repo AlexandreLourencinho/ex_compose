@@ -1,0 +1,46 @@
+name: container-compose-autonomous
+secrets:
+  db_pw_prop:
+    external: true
+  postgres_password:
+    external: true
+networks:
+  autonomous-network:
+volumes:
+  postgres-autonomous-data:
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password/pw.txt
+      POSTGRES_DB: postgres
+    secrets:
+      - source: postgres_password
+        target: /run/secrets/postgres_password/pw.txt
+        mode: "0400"
+        uid: "999"
+        gid: "999"
+    networks:
+      autonomous-network:
+        aliases:
+          - db-postgres
+    volumes:
+      - postgres-autonomous-data:/var/lib/postgresql
+  quarkus:
+    networks:
+      - autonomous-network
+    secrets:
+      - source: db_pw_prop
+        target: /run/secrets/db_pw_prop/db.properties
+        uid: "185"
+        gid: "185"
+        mode: "0400"
+    environment:
+        - QUARKUS_CONFIG_LOCATIONS=file:/run/secrets/db_pw_prop/db.properties
+    image: quarkus-app:latest
+    build:
+      context: ./container-back
+      dockerfile: Containerfile
+    ports:
+      - "8080:8080"

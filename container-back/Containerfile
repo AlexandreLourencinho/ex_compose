@@ -1,0 +1,35 @@
+# build
+FROM gradle:jdk25 AS build
+ARG INSTALL_ZSCALER=false
+RUN mkdir -p /tmp/certs
+
+#cacerts management for zscaler env
+COPY certs /tmp/certs
+RUN if [ "$INSTALL_ZSCALER" = "true" ]; then \
+        echo "zscaler certificates installation..." \
+        && keytool -importcert -cacerts -storepass changeit -noprompt \
+        -alias zscaler-root-ca \
+        -file /tmp/certs/zscaler.crt \
+        && keytool -importcert -cacerts -storepass changeit -noprompt \
+        -alias zscaler-certificat \
+        -file /tmp/certs/zscaler_certificat.cer \
+        && keytool -importcert -cacerts -storepass changeit -noprompt \
+        -alias zscaler-intermediate \
+        -file /tmp/certs/zscaler_intermediate.crt \
+        && rm /tmp/certs/zscaler.crt /tmp/certs/zscaler_certificat.cer /tmp/certs/zscaler_intermediate.crt; \
+    else \
+        echo "zscaler certificates installation skipped..."; \
+    fi
+WORKDIR /app
+COPY . .
+RUN gradle build --no-daemon --console=plain
+
+# execution
+FROM eclipse-temurin:25-jre-alpine
+WORKDIR /app
+RUN addgroup -g 185 appgroup && adduser -u 185 -G appgroup -D -S appuser
+COPY --from=build /app/build/quarkus-app .
+#RUN chown -R 185:185 /app
+USER 185:185
+EXPOSE 8080
+CMD ["java", "-jar", "quarkus-run.jar"]
