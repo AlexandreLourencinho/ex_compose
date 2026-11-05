@@ -39,8 +39,17 @@ nb-configuration.xml
 .secrets/*
 !.secrets/.gitkeep
 !.secrets/.checksum/
+
 .secrets/.checksum/*
 !.secrets/.checksum/.gitkeep
+!.secrets/.checksum/docker/
+!.secrets/.checksum/podman/
+
+.secrets/.checksum/docker/*
+!.secrets/.checksum/docker/.gitkeep
+
+.secrets/.checksum/podman/*
+!.secrets/.checksum/podman/.gitkeep
 
 
 # Plugin directory
