@@ -1,0 +1,5 @@
+secrets:
+  db_pw_prop:
+    external: true
+  db_password:
+    external: true

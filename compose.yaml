@@ -1,9 +1,4 @@
 name: container-compose-autonomous
-secrets:
-  db_pw_prop:
-    external: true
-  postgres_password:
-    external: true
 networks:
   autonomous-network:
 volumes:
@@ -16,7 +11,7 @@ services:
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password/pw.txt
       POSTGRES_DB: postgres
     secrets:
-      - source: postgres_password
+      - source: db_password
         target: /run/secrets/postgres_password/pw.txt
         mode: "0400"
         uid: "999"

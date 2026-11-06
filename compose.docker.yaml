@@ -1,0 +1,5 @@
+secrets:
+  db_pw_prop:
+    file: container-back/.secrets/db.properties
+  db_password:
+    file: container-back/.secrets/db_pw.txt
