@@ -8,7 +8,11 @@ fi
 db_pw_checksum="$SCRIPT_DIR/container-back/.secrets/.checksum/$CONTAINER_ENGINE/db_pw_checksum.txt"
 quarkus_pw_checksum="$SCRIPT_DIR/container-back/.secrets/.checksum/$CONTAINER_ENGINE/quarkus_pw_checksum.txt"
 
-compose_files=(-f "$SCRIPT_DIR/compose.yaml" -f "$SCRIPT_DIR/compose.$CONTAINER_ENGINE.yaml")
+if command -v cygpath > /dev/null 2>&1; then
+    compose_files=(-f "$(cygpath -w "$SCRIPT_DIR/compose.yaml")" -f "$(cygpath -w "$SCRIPT_DIR/compose.$CONTAINER_ENGINE.yaml")")
+else
+    compose_files=(-f "$SCRIPT_DIR/compose.yaml" -f "$SCRIPT_DIR/compose.$CONTAINER_ENGINE.yaml")
+fi
 
 # ==========================================
 # ENVIRONMENT VERIFICATION

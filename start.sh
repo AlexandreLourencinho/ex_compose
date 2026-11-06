@@ -97,7 +97,7 @@ fi
 # COMPOSE STARTUP
 # ==========================================
 
-"$CONTAINER_ENGINE" compose "${compose_files[@]}" up -d
+"$CONTAINER_ENGINE" compose "${compose_files[@]}" up -d --build
 
 if [[ "$refresh_quarkus" == true ]]; then
     echo "Refreshing quarkus checksum..."

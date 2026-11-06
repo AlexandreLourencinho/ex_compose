@@ -37,5 +37,7 @@ services:
     build:
       context: ./container-back
       dockerfile: Containerfile
+      args:
+        INSTALL_ZSCALER: "true"
     ports:
       - "8080:8080"
